@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Motion Comparison Study</title>
 <style>
-  :root { color-scheme: light; }
+  :root {
+    color-scheme: light;
+    --clip-native: 1534px;                /* 0.6x the source video width */
+    /* The 62vw cap matters on narrow windows: without it `width: 100%` would stretch a clip
+       to nearly the full screen, silently overriding the intended scale. */
+    --clip-width: min(var(--clip-native), 62vw);
+  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -15,7 +21,9 @@
     line-height: 1.55;
   }
   header { background: #fff; border-bottom: 1px solid #e2e4e8; padding: 30px 24px 26px; }
-  .wrap { max-width: 1180px; margin: 0 auto; }
+  /* Same width as the clip column so the header text lines up with the cards.
+     Body copy stays narrower via .lead's own max-width, for readability. */
+  .wrap { max-width: calc(var(--clip-width) + 48px); margin: 0 auto; }
   h1 { margin: 0 0 10px; font-size: 22px; font-weight: 650; letter-spacing: -0.01em; }
   .lead { margin: 0 0 16px; max-width: 860px; color: #4b5058; font-size: 14.5px; }
   .lead ol { margin: 8px 0 0; padding-left: 20px; }
@@ -27,9 +35,11 @@
   }
   .cta:hover { background: #31499f; }
   .cta-todo { background: #dfe2e7; color: #6b7280; cursor: default; }
+  /* One clip per row: each one is a 2x3 grid of panels, so it needs the full width
+     to stay legible. --clip-width keeps the row at the intended share of native size. */
   .grid {
-    max-width: 1180px; margin: 26px auto 72px; padding: 0 24px;
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px;
+    max-width: calc(var(--clip-width) + 48px); margin: 26px auto 80px; padding: 0 24px;
+    display: grid; grid-template-columns: 1fr; gap: 30px;
   }
   .card { margin: 0; background: #fff; border: 1px solid #e2e4e8; border-radius: 10px; overflow: hidden; }
   .card-head { display: flex; align-items: baseline; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #eef0f2; }
@@ -40,7 +50,7 @@
   }
   .title { font-size: 15px; font-weight: 600; }
   video { display: block; width: 100%; height: auto; background: #000; }
-  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  @media (max-width: 620px) { .grid { padding: 0 12px; gap: 18px; } }
 </style>
 </head>
 <body>
